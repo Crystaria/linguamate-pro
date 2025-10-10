@@ -98,6 +98,6 @@ src/
 
 项目已配置GitHub Pages自动部署。每次推送到main分支时，会自动构建并部署到GitHub Pages。
 
-访问地址: https://crystaria.github.io/linguamate-ai
+访问地址: https://crystaria.github.io/linguamate-ai-1
 
 

@@ -388,6 +388,6 @@ Thanks to myself for working solo!
 ---
 
 <div align="center">
-  <strong>⭐ 如果这个项目对您有帮助，请给我们一个星标！</strong><br>
-  <strong>⭐ If this project helps you, please give us a star!</strong>
+  <strong>⭐ 如果这个项目对您有帮助，请给我一个星标！</strong><br>
+  <strong>⭐ If this project helps you, please give me a star!</strong>
 </div>
