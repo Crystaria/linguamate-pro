@@ -381,9 +381,9 @@ For questions or suggestions, please contact:
 
 ## 🙏 致谢 | Acknowledgments
 
-感谢所有开源社区和贡献者的支持！
+感谢我的努力！
 
-Thanks to all open source communities and contributors for their support!
+Thanks to myself for working solo!
 
 ---
 
