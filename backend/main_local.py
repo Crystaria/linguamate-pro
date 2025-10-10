@@ -618,7 +618,7 @@ def generate_chinese_response(message: str, message_lower: str, context: dict, l
 
 # 生成基于内容的练习题
 def generate_content_based_exercises(text: str, analysis: str, level: str):
-    """根据文本内容生成相关的英文练习题"""
+    """根据学习等级生成不同难度的练习题"""
     
     # 分析文本内容
     words = text.lower().split()
@@ -633,94 +633,203 @@ def generate_content_based_exercises(text: str, analysis: str, level: str):
     # 去重并限制数量
     key_words = list(set(key_words))[:10]
     
+    # 根据学习等级生成不同难度的题目
+    if level == "beginner":
+        return generate_beginner_exercises(text, key_words, sentences)
+    elif level == "intermediate":
+        return generate_intermediate_exercises(text, key_words, sentences)
+    else:  # advanced
+        return generate_advanced_exercises(text, key_words, sentences)
+
+def generate_beginner_exercises(text: str, key_words: list, sentences: list) -> list:
+    """生成初级水平的练习题"""
     questions = []
     
-    # 题目1：词汇理解题
+    # 题目1：简单词汇理解题
     if key_words:
         target_word = random.choice(key_words)
-        similar_words = [w for w in key_words if w != target_word][:3]
-        if len(similar_words) < 3:
-            similar_words.extend(["example", "sample", "test"])
-        
         questions.append({
             "id": 1,
-            "question": f"What does the word '{target_word}' mean in the context of the text?",
+            "question": f"What does the word '{target_word}' mean?",
             "options": [
-                f"The word '{target_word}' refers to a specific concept",
-                f"The word '{target_word}' is used metaphorically", 
-                f"The word '{target_word}' indicates time",
-                f"The word '{target_word}' shows location"
+                f"A type of {target_word}",
+                f"Something related to {target_word}",
+                f"The opposite of {target_word}",
+                f"A similar word to {target_word}"
             ],
             "correct_answer": "A",
-            "explanation": f"In the given text, '{target_word}' is used to refer to a specific concept or idea."
+            "explanation": f"The word '{target_word}' refers to a specific type or category."
         })
     
-    # 题目2：语法结构题
-    if len(sentences) > 1:
-        questions.append({
-            "id": 2,
-            "question": "What type of sentence structure is primarily used in this text?",
-            "options": [
-                "Simple sentences with basic subject-verb-object structure",
-                "Complex sentences with multiple clauses",
-                "Compound sentences with coordinating conjunctions",
-                "Interrogative sentences asking questions"
-            ],
-            "correct_answer": "A",
-            "explanation": "The text primarily uses simple sentence structures with clear subject-verb-object patterns."
-        })
-    
-    # 题目3：阅读理解题
+    # 题目2：基本语法题
     questions.append({
-        "id": 3,
-        "question": "What is the main purpose of this text?",
+        "id": 2,
+        "question": "What is the main subject of this text?",
         "options": [
-            "To inform or describe something",
-            "To persuade the reader",
-            "To tell a story",
-            "To ask questions"
+            "Learning and education",
+            "Food and cooking",
+            "Travel and adventure",
+            "Sports and games"
         ],
-            "correct_answer": "A",
-            "explanation": "The text appears to be informational or descriptive in nature, presenting facts or information."
+        "correct_answer": "A",
+        "explanation": "The text is mainly about learning and educational topics."
     })
     
-    # 题目4：词汇选择题
+    # 题目3：简单理解题
+    questions.append({
+        "id": 3,
+        "question": "What can you learn from this text?",
+        "options": [
+            "Basic information about the topic",
+            "How to solve complex problems",
+            "Advanced scientific concepts",
+            "Difficult vocabulary words"
+        ],
+        "correct_answer": "A",
+        "explanation": "This text provides basic information that is easy to understand."
+    })
+    
+    return questions
+
+def generate_intermediate_exercises(text: str, key_words: list, sentences: list) -> list:
+    """生成中级水平的练习题"""
+    questions = []
+    
+    # 题目1：词汇分析题
     if key_words:
         target_word = random.choice(key_words)
         questions.append({
-            "id": 4,
-            "question": f"Which word from the text best describes the overall tone?",
+            "id": 1,
+            "question": f"In the context of this text, '{target_word}' most likely means:",
             "options": [
-                f"{target_word}",
-                "emotional",
-                "technical", 
-                "humorous"
+                f"A specific type of {target_word} concept",
+                f"The general idea of {target_word}",
+                f"An example of {target_word} usage",
+                f"A definition of {target_word}"
             ],
             "correct_answer": "A",
-            "explanation": f"The word '{target_word}' from the text best captures the overall tone and meaning."
+            "explanation": f"The word '{target_word}' is used in a specific context to convey a particular meaning."
         })
     
-    # 题目5：语法时态题
+    # 题目2：语法结构分析题
     questions.append({
-        "id": 5,
-        "question": "What tense is primarily used in this text?",
+        "id": 2,
+        "question": "What type of sentence structure is used in this text?",
         "options": [
-            "Present tense",
-            "Past tense", 
-            "Future tense",
-            "Mixed tenses"
+            "Simple and compound sentences",
+            "Only complex sentences",
+            "Only simple sentences",
+            "Only compound sentences"
         ],
         "correct_answer": "A",
-        "explanation": "The text primarily uses present tense to describe current situations or general facts."
+        "explanation": "The text uses a mix of simple and compound sentences to convey information clearly."
     })
     
-    # 随机选择3道题，确保不重复
-    if len(questions) > 3:
-        questions = random.sample(questions, 3)
+    # 题目3：理解分析题
+    questions.append({
+        "id": 3,
+        "question": "What is the author's main purpose in writing this text?",
+        "options": [
+            "To inform and educate readers about a topic",
+            "To entertain with a story",
+            "To persuade readers to buy something",
+            "To describe a personal experience"
+        ],
+        "correct_answer": "A",
+        "explanation": "The author's primary goal is to provide information and educate the reader."
+    })
     
-    # 重新分配ID
-    for i, question in enumerate(questions):
-        question["id"] = i + 1
+    # 题目4：推理题
+    questions.append({
+        "id": 4,
+        "question": "Based on the text, what can we infer about the topic?",
+        "options": [
+            "It is important for learning",
+            "It is difficult to understand",
+            "It is not very useful",
+            "It is only for experts"
+        ],
+        "correct_answer": "A",
+        "explanation": "The text suggests that the topic is valuable for educational purposes."
+    })
+    
+    return questions
+
+def generate_advanced_exercises(text: str, key_words: list, sentences: list) -> list:
+    """生成高级水平的练习题"""
+    questions = []
+    
+    # 题目1：高级词汇分析题
+    if key_words:
+        target_word = random.choice(key_words)
+        questions.append({
+            "id": 1,
+            "question": f"Analyze the rhetorical significance of '{target_word}' in the context of this text:",
+            "options": [
+                f"It serves as a metaphorical device to convey abstract concepts",
+                f"It functions as a simple descriptive term",
+                f"It acts as a transitional element between topics",
+                f"It represents a literal interpretation only"
+            ],
+            "correct_answer": "A",
+            "explanation": f"The word '{target_word}' is used rhetorically to communicate complex ideas through metaphor and symbolism."
+        })
+    
+    # 题目2：文体分析题
+    questions.append({
+        "id": 2,
+        "question": "Evaluate the author's stylistic approach and its effectiveness:",
+        "options": [
+            "The author employs sophisticated academic language appropriate for scholarly discourse",
+            "The writing style is deliberately simplified for general audiences",
+            "The tone remains consistently conversational throughout",
+            "The vocabulary targets only beginner-level readers"
+        ],
+        "correct_answer": "A",
+        "explanation": "The author uses advanced academic language and complex sentence structures, indicating sophisticated writing skills."
+    })
+    
+    # 题目3：批判性思维题
+    questions.append({
+        "id": 3,
+        "question": "Critically assess the argument presented in this text:",
+        "options": [
+            "The argument demonstrates logical coherence with supporting evidence",
+            "The argument lacks sufficient evidence to support its claims",
+            "The argument is purely subjective without objective basis",
+            "The argument contradicts itself throughout the text"
+        ],
+        "correct_answer": "A",
+        "explanation": "The text presents a well-structured argument with logical flow and supporting evidence."
+    })
+    
+    # 题目4：综合理解题
+    questions.append({
+        "id": 4,
+        "question": "Synthesize the main themes and their implications:",
+        "options": [
+            "The text explores complex interrelationships between multiple concepts",
+            "The text focuses on a single, simple theme throughout",
+            "The text presents unrelated ideas without connection",
+            "The text avoids addressing complex themes entirely"
+        ],
+        "correct_answer": "A",
+        "explanation": "The text demonstrates sophisticated thematic development with interconnected concepts and implications."
+    })
+    
+    # 题目5：高级推理题
+    questions.append({
+        "id": 5,
+        "question": "What are the broader implications of the author's perspective?",
+        "options": [
+            "The perspective suggests significant implications for academic discourse",
+            "The perspective has no broader significance beyond the immediate text",
+            "The perspective contradicts established academic principles",
+            "The perspective is too narrow to have broader implications"
+        ],
+        "correct_answer": "A",
+        "explanation": "The author's sophisticated perspective has meaningful implications that extend beyond the immediate scope of the text."
+    })
     
     return questions
 
@@ -1016,7 +1125,7 @@ async def submit_answer(exercise_id: str, question_id: int, user_answer: str, qu
 
 @app.post("/chat")
 async def chat_with_ai(request: ChatRequest):
-    """与AI进行自然对话练习 - 支持上下文记忆、角色扮演和自定义场景"""
+    """与AI进行自然对话练习 - 支持上下文记忆和角色扮演"""
     try:
         # 从请求中获取参数
         message = request.message
@@ -1276,10 +1385,6 @@ def generate_system_prompt(scenario: str, level: str, is_english: bool, custom_s
         base_prompt += " Use simple vocabulary and clear sentences suitable for beginners."
     elif level == "beginner" and not is_english:
         base_prompt += " 使用简单的词汇和清晰的句子，适合初学者。"
-    elif level == "advanced" and is_english:
-        base_prompt += " Use more sophisticated vocabulary and complex sentence structures suitable for advanced learners."
-    elif level == "advanced" and not is_english:
-        base_prompt += " 使用更高级的词汇和复杂的句子结构，适合高级学习者。"
     
     return base_prompt
 
