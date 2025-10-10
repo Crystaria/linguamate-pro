@@ -89,7 +89,7 @@ from PIL import Image
 try:
     print(pytesseract.get_tesseract_version())
     print("Tesseract安装成功！")
-except Exception as e
+except Exception as e:
     print(f"Tesseract未正确安装：{e}")
 ```
 
