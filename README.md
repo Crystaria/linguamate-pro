@@ -80,61 +80,60 @@ npm start
 
 ### 📝 文本分析 | Text Analysis
 
-**功能描述** | **Description**: 上传英文文本，AI进行深度语言学分析，包括词汇、语法、语义分析，并生成个性化的练习题。
+**功能描述** | **Description**: 上传英文文本，AI进行深度语言学分析，包括词汇、语法、语义分析，并生成个性化的练习题/Upload English text, and the AI performs in-depth linguistic analysis, including lexical, grammatical, and semantic analysis, then generates personalized practice exercises
 
 **主要特性** | **Key Features**:
-- 🔍 词汇分析：词根词缀解析、词汇难度评估
-- 📊 语法结构：句子类型分析、语法复杂度评估  
-- 🎯 语义理解：主题识别、语境分析
-- 📚 练习生成：根据学习等级生成不同难度的选择题
+- 🔍 词汇分析：词根词缀解析、词汇难度评估/Vocabulary Analysis: Root and Suffix Breakdown, Vocabulary Difficulty Assessment
+- 📊 语法结构：句子类型分析、语法复杂度评估/Grammar Structure: Sentence Type Analysis, Syntactic Complexity Evaluation  
+- 🎯 语义理解：主题识别、语境分析/Semantic Understanding: Topic Identification, Contextual Analysis
+- 📚 练习生成：根据学习等级生成不同难度的选择题/Exercise Generation: Generate Multiple-Choice Questions of Varying Difficulty Based on Learning Levels
 
 ### 🖼️ 图片分析 | Image Analysis
 
-**功能描述** | **Description**: 上传教材截图或包含文字的图片，系统自动识别文字内容并进行语言学分析。
+**功能描述** | **Description**: 上传教材截图或包含文字的图片，系统自动识别文字内容并进行语言学分析/Upload screenshots of teaching materials or images containing text, and the system will automatically recognize the text content and perform linguistic analysis
 
 **主要特性** | **Key Features**:
-- 🔤 OCR文字识别：支持中英文文字提取
-- 📖 内容分析：图片文字的语言学分析
-- 🎨 智能识别：根据图片类型提供相应的分析
-- 📝 练习生成：基于图片内容生成相关练习题
+- 🔤 OCR文字识别：支持中英文文字提取/OCR Text Recognition: Supports extraction of Chinese and English text
+- 📖 内容分析：图片文字的语言学分析/Content Analysis: Linguistic analysis of text within images
+- 🎨 智能识别：根据图片类型提供相应的分析/Intelligent Recognition: Provides tailored analysis based on image type
+- 📝 练习生成：基于图片内容生成相关练习题/Exercise Generation: Creates relevant practice questions based on image content
 
 ### 💬 AI对话练习 | AI Conversation Practice
 
-**功能描述** | **Description**: 与AI进行自然对话，模拟真实场景，提升语言实际运用能力。
+**功能描述** | **Description**: 与AI进行自然对话，模拟真实场景，提升语言实际运用能力/Engage in natural conversations with AI, simulate real-life scenarios, and enhance practical language skills
 
 **主要特性** | **Key Features**:
-- 🍽️ 预设场景：餐厅点餐、购物、问路、自我介绍
-- 🎭 自定义场景：用户可以创建个性化的对话场景
-- 🧠 上下文记忆：AI记住对话历史，保持连贯性
-- 📈 分级对话：根据学习等级调整对话难度
+- 🍽️ 预设场景：餐厅点餐、购物、问路、自我介绍/Pre-set Scenarios: Restaurant ordering, shopping, asking for directions, self-introduction
+- 🎭 自定义场景：用户可以创建个性化的对话场景/Custom Scenarios: Users can create personalized dialogue scenarios
+- 🧠 上下文记忆：AI记住对话历史，保持连贯性/Contextual Memory: AI retains conversation history for seamless continuity
+- 📈 分级对话：根据学习等级调整对话难度/Tiered Dialogue: Adjusts difficulty based on learning proficiency levels
 
 ### 📚 学习历史 | Learning History
 
-**功能描述** | **Description**: 记录所有学习活动，包括文本分析、图片分析、对话练习等，提供学习进度追踪。
+**功能描述** | **Description**: 记录所有学习活动，包括文本分析、图片分析、对话练习等，提供学习进度追踪/Track all learning activities, including text analysis, image analysis, conversation practice, and more, with progress tracking
 
 **主要特性** | **Key Features**:
-- 📊 学习记录：完整的活动历史记录
-- 🎯 进度追踪：学习成果和得分统计
-- 🗑️ 数据管理：一键清除历史记录功能
+- 📊 学习记录：完整的活动历史记录/Learning History: Complete activity log
+- 🗑️ 数据管理：一键清除历史记录功能/Data Management: One-tap history clearing feature
 
 ---
 
 ## 🎓 学习等级系统 | Learning Level System
 
 ### 🔰 初级 | Beginner
-- **文本分析** | **Text Analysis**: 简单词汇、基础语法、清晰指导
-- **图片分析** | **Image Analysis**: 基础文字识别、简单句子分析
-- **对话练习** | **Conversation**: 日常交流、简单问答
+- **文本分析** | **Text Analysis**: 简单词汇、基础语法、清晰指导/Simple vocabulary, basic grammar, clear guidance
+- **图片分析** | **Image Analysis**: 基础文字识别、简单句子分析/Basic text recognition, simple sentence analysis
+- **对话练习** | **Conversation**: 日常交流、简单问答/Daily communication, simple Q&A
 
 ### 🔶 中级 | Intermediate  
-- **文本分析** | **Text Analysis**: 复合句型、推理分析、扩展词汇
-- **图片分析** | **Image Analysis**: 复杂文本分析、语法结构解析
-- **对话练习** | **Conversation**: 引导式复杂问题、多领域话题
+- **文本分析** | **Text Analysis**: 复合句型、推理分析、扩展词汇/Complex sentence structures, inference analysis, expanded vocabulary  
+- **图片分析** | **Image Analysis**: 复杂文本分析、语法结构解析/Complex text analysis, grammatical structure parsing
+- **对话练习** | **Conversation**: 引导式复杂问题、多领域话题/Guided complex problem-solving, multi-domain topics
 
 ### 🔥 高级 | Advanced
-- **文本分析** | **Text Analysis**: 复杂语法、批判思维、学术表达
-- **图片分析** | **Image Analysis**: 深度文化背景分析、文学性内容
-- **对话练习** | **Conversation**: 真实问题解决、高级语言技能
+- **文本分析** | **Text Analysis**: 复杂语法、批判思维、学术表达/Complex grammar, critical thinking, academic expression
+- **图片分析** | **Image Analysis**: 深度文化背景分析、文学性内容/In-depth cultural context analysis, literary content
+- **对话练习** | **Conversation**: 真实问题解决、高级语言技能/Real-world problem solving, advanced language skills
 
 ---
 
@@ -319,15 +318,6 @@ DELETE /learning-records
 
 ---
 
-## 🏆 竞赛信息 | Competition Information
-
-- **竞赛名称** | **Competition**: EduHacks AI Fest 2025
-- **竞赛时间** | **Date**: September 27 - October 11, 2025
-- **竞赛主题** | **Theme**: Personalized Learning
-- **竞赛赛道** | **Track**: AI-driven Personalized Learning Systems
-
----
-
 ## 👥 团队成员 | Team Members
 
 - **Crystaria** - 全栈开发 / 产品设计 / 语言学研究
@@ -349,21 +339,6 @@ DELETE /learning-records
 - [ ] 单元测试 | Unit testing
 - [ ] 用户反馈系统 | User feedback system
 
----
-
-## 📄 许可证 | License
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🤝 贡献指南 | Contributing
-
-我们欢迎任何形式的贡献！请查看 [CONTRIBUTING.md](CONTRIBUTING.md) 了解如何参与项目开发。
-
-We welcome contributions of all kinds! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for how to get involved.
 
 ---
 
@@ -375,7 +350,7 @@ For questions or suggestions, please contact:
 
 - **GitHub**: [Crystaria](https://github.com/Crystaria)
 - **项目地址** | **Project URL**: https://github.com/Crystaria/linguamate-ai-1
-- **在线演示** | **Live Demo**: https://crystaria.github.io/linguamate-ai-1
+- **在线演示** | **Live Demo**: https://youtu.be/a9MqQiWWUL4?si=3xKcROsqDsFgZJfy
 
 ---
 
