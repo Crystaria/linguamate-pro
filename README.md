@@ -323,7 +323,11 @@ docker-compose up -d
 
 ## 🎬 演示视频
 
-[观看演示视频](https://youtu.be/a9MqQiWWUL4)
+**EduHacks AI Fest 2025 参赛作品**
+
+[观看演示视频](https://www.youtube.com/watch?v=a9MqQiWWUL4)
+
+[🏆 Devpost 参赛页面](https://devpost.com/software/linguamate-ai)
 
 ---
 
