@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ["python311", "pip"]
+nixPkgs = ["python311"]
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = ["cd backend && pip3 install -r requirements.txt"]
 
 [start]
-cmd = "python main_local.py"
+cmd = "cd backend && python3 main_local.py"
