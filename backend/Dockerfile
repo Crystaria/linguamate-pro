@@ -1,3 +1,4 @@
+# Railway deployment - Updated 2026-03-04 15:01
 FROM python:3.11-slim
 
 WORKDIR /app
