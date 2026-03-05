@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, FileText, Image, MessageCircle, Eye, Trash2, AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import API_BASE_URL from '../config';
 
 const LearningHistory = () => {
   const { t } = useLanguage();
@@ -10,8 +11,6 @@ const LearningHistory = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearing, setClearing] = useState(false);
-
-  const API_BASE_URL = 'http://localhost:8000';
 
   useEffect(() => {
     fetchLearningRecords();

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Send, FileText, Brain, BookOpen, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import API_BASE_URL from '../config';
 
 const TextAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
@@ -13,8 +14,6 @@ const TextAnalysis = ({ userLevel }) => {
   const [submittedAnswers, setSubmittedAnswers] = useState({});
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-
-  const API_BASE_URL = 'http://localhost:8000';
 
   const handleTextAnalysis = async () => {
     if (!text.trim()) return;

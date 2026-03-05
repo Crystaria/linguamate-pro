@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, Image as ImageIcon, Brain, BookOpen, CheckCircle, X } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import API_BASE_URL from '../config';
 
 const ImageAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
@@ -15,8 +16,6 @@ const ImageAnalysis = ({ userLevel }) => {
   const [exerciseId, setExerciseId] = useState(null);
   const [userAnswers, setUserAnswers] = useState({});
   const [submittedAnswers, setSubmittedAnswers] = useState({});
-
-  const API_BASE_URL = 'http://localhost:8000';
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
