@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, User, Bot, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import API_BASE_URL from '../config';
 
 const ChatPractice = ({ userLevel }) => {
   const { t } = useLanguage();
@@ -16,8 +17,6 @@ const ChatPractice = ({ userLevel }) => {
   const [customScenarioName, setCustomScenarioName] = useState('');
   const [customScenarioDescription, setCustomScenarioDescription] = useState('');
   const messagesEndRef = useRef(null);
-
-  const API_BASE_URL = 'http://localhost:8000';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
