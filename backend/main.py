@@ -23,7 +23,7 @@ app = FastAPI(title="LinguaMate AI API", version="1.0.0")
 # CORS设置
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://frontend-two-alpha-40.vercel.app", "https://frontend-kxju2f2xf-crystarias-projects.vercel.app", "https://*.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
