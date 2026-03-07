@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "linguamate-pro-frontend",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "framework": "create-react-app",
+  "env": {
+    "REACT_APP_API_URL": "https://linguamate-pro-production.up.railway.app"
+  }
+}
