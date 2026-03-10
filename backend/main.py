@@ -20,10 +20,18 @@ load_dotenv()
 
 app = FastAPI(title="LinguaMate AI API", version="1.0.0")
 
-# CORS设置
+# CORS 设置 - 允许所有 Vercel 域名
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://frontend-two-alpha-40.vercel.app", "https://frontend-kxju2f2xf-crystarias-projects.vercel.app", "https://*.vercel.app"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://frontend-two-alpha-40.vercel.app",
+        "https://frontend-kxju2f2xf-crystarias-projects.vercel.app",
+        "https://linguamate-pro.vercel.app",
+        "https://linguamate-pro-production.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",  # 支持所有 Vercel 预览域名
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
