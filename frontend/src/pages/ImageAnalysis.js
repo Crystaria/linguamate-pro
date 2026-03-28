@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, Image as ImageIcon, Brain, BookOpen, CheckCircle, X } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useToast } from '../components/Toast';
 import API_BASE_URL from '../config';
 
 const ImageAnalysis = ({ userLevel }) => {
