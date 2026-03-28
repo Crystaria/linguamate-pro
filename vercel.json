@@ -3,9 +3,9 @@
   "name": "linguamate-pro",
   "builds": [
     {
-      "src": "package.json",
+      "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
+      "config": { "distDir": "frontend/build" }
     }
   ],
   "routes": [
