@@ -9,7 +9,6 @@ const ChatPractice = ({ userLevel }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [context, setContext] = useState('');
   const [selectedScenario, setSelectedScenario] = useState('');
   const [conversationStarted, setConversationStarted] = useState(false);
   const [customScenarios, setCustomScenarios] = useState([]);
@@ -184,6 +183,7 @@ const ChatPractice = ({ userLevel }) => {
     }
   ];
 
+  // eslint-disable-next-line no-unused-vars
   const addStarterMessage = (starter) => {
     setInputMessage(starter);
   };
