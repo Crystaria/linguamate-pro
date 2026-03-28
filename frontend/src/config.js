@@ -7,5 +7,5 @@ export const config = {
   API_BASE_URL,
 };
 
-// 便捷导出
+// 默认导出
 export default API_BASE_URL;

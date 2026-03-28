@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { ToastProvider } from './components/Toast';
 import Header from './components/Header';
 import Home from './pages/Home';
 import TextAnalysis from './pages/TextAnalysis';
@@ -14,20 +15,22 @@ function App() {
 
   return (
     <LanguageProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Header userLevel={userLevel} setUserLevel={setUserLevel} />
-          <main className="container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/text-analysis" element={<TextAnalysis userLevel={userLevel} />} />
-              <Route path="/image-analysis" element={<ImageAnalysis userLevel={userLevel} />} />
-              <Route path="/chat-practice" element={<ChatPractice userLevel={userLevel} />} />
-              <Route path="/learning-history" element={<LearningHistory />} />
-            </Routes>
-          </main>
-        </div>
-      </Router>
+      <ToastProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50">
+            <Header userLevel={userLevel} setUserLevel={setUserLevel} />
+            <main className="container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/text-analysis" element={<TextAnalysis userLevel={userLevel} />} />
+                <Route path="/image-analysis" element={<ImageAnalysis userLevel={userLevel} />} />
+                <Route path="/chat-practice" element={<ChatPractice userLevel={userLevel} />} />
+                <Route path="/learning-history" element={<LearningHistory />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </ToastProvider>
     </LanguageProvider>
   );
 }
