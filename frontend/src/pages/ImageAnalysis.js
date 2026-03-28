@@ -7,6 +7,7 @@ import API_BASE_URL from '../config';
 
 const ImageAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
+  const toast = useToast();
   const [uploadedFile, setUploadedFile] = useState(null);
   const [extractedText, setExtractedText] = useState('');
   const [analysis, setAnalysis] = useState(null);
@@ -59,7 +60,7 @@ const ImageAnalysis = ({ userLevel }) => {
       console.error('错误详情:', error.response?.data);
       const errorMessage = error.response?.data?.detail || error.message || (t.language === 'en' ? 'Image analysis failed, please retry' : '图片分析失败，请重试');
       const alertMsg = t.language === 'en' ? `Image analysis failed: ${errorMessage}` : `图片分析失败: ${errorMessage}`;
-      alert(alertMsg);
+      toast.error(alertMsg);
     } finally {
       setLoading(false);
     }
@@ -86,7 +87,7 @@ const ImageAnalysis = ({ userLevel }) => {
       console.error('错误详情:', error.response?.data);
       const errorMessage = error.response?.data?.detail || error.message || (t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试');
       const alertMsg = t.language === 'en' ? `Failed to generate exercises: ${errorMessage}` : `生成练习失败: ${errorMessage}`;
-      alert(alertMsg);
+      toast.error(alertMsg);
     } finally {
       setLoading(false);
     }

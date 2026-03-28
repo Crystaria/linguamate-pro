@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, FileText, Brain, BookOpen, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useToast } from '../components/Toast';
 import API_BASE_URL from '../config';
 
 const TextAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
+  const toast = useToast();
   const [text, setText] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [exercises, setExercises] = useState(null);
@@ -29,11 +31,12 @@ const TextAnalysis = ({ userLevel }) => {
       if (response.data.success) {
         setAnalysis(response.data.analysis);
         setCurrentStep(2);
+        toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
       }
     } catch (error) {
       console.error('分析失败:', error);
-      const errorMsg = t.language === 'en' ? 'Analysis failed, please retry' : '分析失败，请重试';
-      alert(errorMsg);
+      const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Analysis failed, please retry' : '分析失败，请重试');
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -56,11 +59,12 @@ const TextAnalysis = ({ userLevel }) => {
         setUserAnswers({});
         setSubmittedAnswers({});
         setCurrentStep(3);
+        toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
       }
     } catch (error) {
       console.error('生成练习失败:', error);
-      const errorMsg = t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试';
-      alert(errorMsg);
+      const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试');
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -89,11 +93,13 @@ const TextAnalysis = ({ userLevel }) => {
             userAnswer: response.data.user_answer
           }
         }));
+        toast.success(response.data.is_correct ?
+          (t.language === 'en' ? 'Correct!' : '回答正确！') :
+          (t.language === 'en' ? 'Answer submitted' : '答案已提交'));
       }
     } catch (error) {
       console.error('提交答案失败:', error);
-      const errorMsg = t.language === 'en' ? 'Failed to submit answer, please retry' : '提交答案失败，请重试';
-      alert(errorMsg);
+      toast.error(t.language === 'en' ? 'Failed to submit answer, please retry' : '提交答案失败，请重试');
     }
   };
 

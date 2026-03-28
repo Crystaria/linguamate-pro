@@ -10,13 +10,37 @@ from pydantic import BaseModel
 import random
 from PIL import Image
 import pytesseract
-import os
-
-# 设置Tesseract路径
-TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-if os.path.exists(TESSERACT_PATH):
-    pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 import io
+import logging
+
+# 配置日志系统
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('linguamate.log', encoding='utf-8')
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# 设置 Tesseract 路径 - 使用环境变量优先
+TESSERACT_CMD = os.getenv('TESSERACT_CMD', '')
+if TESSERACT_CMD:
+    pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
+elif os.name == 'nt':  # Windows
+    # 尝试常见安装路径
+    common_paths = [
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
+    ]
+    for path in common_paths:
+        if os.path.exists(path):
+            pytesseract.pytesseract.tesseract_cmd = path
+            logger.info(f"Tesseract configured: {path}")
+            break
+    else:
+        logger.warning("Tesseract not found. Set TESSERACT_CMD env var if needed.")
 
 # 加载环境变量
 load_dotenv()
@@ -26,6 +50,10 @@ learning_records = []
 
 # 全局对话历史存储（内存存储）
 conversation_history = []
+
+logger.info("LinguaMate AI Local Backend starting...")
+
+
 
 def shuffle_options_and_correct_answer(options: list, correct_answer: str):
     """随机打乱选项并返回新的正确答案位置"""
