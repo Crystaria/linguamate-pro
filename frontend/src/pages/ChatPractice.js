@@ -27,7 +27,6 @@ const ChatPractice = ({ userLevel }) => {
 
   const startConversation = async (scenario) => {
     setSelectedScenario(scenario);
-    setContext(scenario);
     setConversationStarted(true);
     
     // 根据场景生成开场白
@@ -122,7 +121,6 @@ const ChatPractice = ({ userLevel }) => {
 
   const resetChat = () => {
     setMessages([]);
-    setContext('');
     setSelectedScenario('');
     setConversationStarted(false);
     setInputMessage('');
@@ -182,11 +180,6 @@ const ChatPractice = ({ userLevel }) => {
       starter: "你好，我叫小明，很高兴认识你。"
     }
   ];
-
-  // eslint-disable-next-line no-unused-vars
-  const addStarterMessage = (starter) => {
-    setInputMessage(starter);
-  };
 
   const startScenario = (scenario) => {
     startConversation(scenario.id);

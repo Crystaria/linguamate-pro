@@ -103,10 +103,16 @@ def save_learning_record(record_type: str, level: str, content: str, analysis: s
 
 app = FastAPI(title="LinguaMate AI API", version="1.0.0")
 
-# CORS设置
+# CORS 设置 - 支持本地开发和 Vercel 部署
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://linguamate-pro.vercel.app",
+        "https://linguamate-pro-production.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",  # 支持所有 Vercel 预览域名
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
