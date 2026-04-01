@@ -110,13 +110,24 @@ sudo apt-get install tesseract-ocr-chi-sim  # 中文支持
 
 ```
 backend/
-├── main_local.py          # 本地AI版本（推荐）
-├── main_simple.py         # 简化版本
-├── main_deepseek.py       # DeepSeek API版本
-├── main.py               # OpenAI API版本
-├── requirements.txt      # Python依赖
+├── main_local.py          # 本地 AI 版本（推荐用于开发和演示）
+├── main_simple.py         # 简化版本（基础功能）
+├── main_deepseek.py       # DeepSeek API 版本（使用 DeepSeek 模型）
+├── main.py               # OpenAI API 版本（使用 GPT 模型）
+├── requirements.txt      # Python 依赖
 └── README.md            # 说明文档
 ```
+
+### 各版本说明
+
+| 文件 | 适用场景 | API 密钥 | 推荐度 |
+|------|----------|----------|--------|
+| `main_local.py` | 本地开发、演示、无网络环境 | 不需要 | ⭐⭐⭐⭐⭐ 推荐 |
+| `main_simple.py` | 快速测试、最小化功能 | 不需要 | ⭐⭐⭐ |
+| `main_deepseek.py` | 生产环境（国内） | DeepSeek API Key | ⭐⭐⭐⭐ |
+| `main.py` | 生产环境（国际） | OpenAI API Key | ⭐⭐⭐⭐ |
+
+**推荐使用 `main_local.py`** - 无需配置 API 密钥，适合大多数开发和演示场景。
 
 ## 开发指南
 
