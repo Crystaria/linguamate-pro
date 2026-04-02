@@ -5,8 +5,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../components/Toast';
 import API_BASE_URL, { IS_DEMO_MODE } from '../config';
 
-// Demo 模式模拟数据
-const DEMO_ANALYSIS = `语言分析结果（演示模式）：
+// Demo 模式模拟数据 - 在组件内根据语言动态获取
+const getDemoAnalysis = (lang) => lang === 'zh' ? `语言学分析结果（演示模式）：
 
 这段文本展示了以下语言特点：
 
@@ -22,9 +22,59 @@ const DEMO_ANALYSIS = `语言分析结果（演示模式）：
    - 段落之间逻辑清晰
    - 使用恰当的连接词
 
-建议：继续保持！可以尝试使用更复杂的句式结构。`;
+建议：继续保持！可以尝试使用更复杂的句式结构。` : `Language Analysis Result (Demo Mode):
 
-const DEMO_EXERCISES = [
+This text demonstrates the following language features:
+
+1. Vocabulary Richness: ⭐⭐⭐⭐
+   - Uses diverse expressions
+   - Contains some advanced vocabulary
+
+2. Grammar Structure: ⭐⭐⭐⭐
+   - Varied sentence patterns
+   - Accurate tense usage
+
+3. Coherence: ⭐⭐⭐⭐⭐
+   - Clear logic between paragraphs
+   - Appropriate use of connectors
+
+Suggestion: Keep it up! You can try using more complex sentence structures.`;
+
+const getDemoExercises = (lang) => lang === 'zh' ? [
+  {
+    id: 1,
+    question: "这篇文章的主旨是什么？",
+    options: [
+      "A. 学习语言很困难",
+      "B. 语言学习打开新文化之门",
+      "C. AI 正在改变教育",
+      "D. 旅行帮助语言学习"
+    ],
+    correct: "B"
+  },
+  {
+    id: 2,
+    question: "哪个词最能描述作者的语气？",
+    options: [
+      "A. 消极的",
+      "B. 中立的", 
+      "C. 乐观的",
+      "D. 批判的"
+    ],
+    correct: "C"
+  },
+  {
+    id: 3,
+    question: "根据文章，AI 在语言学习中的作用是什么？",
+    options: [
+      "A. 替代老师",
+      "B. 提供个性化反馈",
+      "C. 增加学习负担",
+      "D. 减少学习时间"
+    ],
+    correct: "B"
+  }
+] : [
   {
     id: 1,
     question: "What is the main idea of the text?",
@@ -49,12 +99,12 @@ const DEMO_EXERCISES = [
   },
   {
     id: 3,
-    question: "根据文章，AI 在语言学习中的作用是什么？",
+    question: "According to the text, what is AI's role in language learning?",
     options: [
-      "A. 替代老师",
-      "B. 提供个性化反馈",
-      "C. 增加学习负担",
-      "D. 减少学习时间"
+      "A. Replace teachers",
+      "B. Provide personalized feedback",
+      "C. Increase learning burden",
+      "D. Reduce learning time"
     ],
     correct: "B"
   }
@@ -80,7 +130,7 @@ const TextAnalysis = ({ userLevel }) => {
       if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟分析结果
         setTimeout(() => {
-          setAnalysis(DEMO_ANALYSIS);
+          setAnalysis(getDemoAnalysis(t.language));
           setCurrentStep(2);
           toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
           setLoading(false);
@@ -115,7 +165,7 @@ const TextAnalysis = ({ userLevel }) => {
       if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟练习题
         setTimeout(() => {
-          setExercises(DEMO_EXERCISES);
+          setExercises(getDemoExercises(t.language));
           setExerciseId('demo-exercise');
           setUserAnswers({});
           setSubmittedAnswers({});
