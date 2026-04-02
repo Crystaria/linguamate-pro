@@ -2,7 +2,28 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, User, Bot, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
-import API_BASE_URL from '../config';
+import API_BASE_URL, { IS_DEMO_MODE } from '../config';
+
+// Demo 模式回复模板
+const DEMO_REPLIES = {
+  restaurant: [
+    { en: "Great choice! Our pasta is freshly made today. Would you like any sauce with that?", zh: "很好的选择！我们的意大利面是今天新鲜做的。您需要配什么酱吗？" },
+    { en: "Excellent! I'll bring that right out for you. Anything to drink?", zh: "好的！我马上为您端上来。需要喝点什么吗？" },
+    { en: "Perfect! Enjoy your meal!", zh: "完美！请享用您的美食！" }
+  ],
+  direction: [
+    { en: "Oh, the train station? It's about 5 minutes walk. Go straight and turn left at the second crossing.", zh: "哦，火车站啊？步行大约 5 分钟。直走，在第二个路口左转。" },
+    { en: "Yes, you'll see a big supermarket on the corner. The station is right there.", zh: "对的，你会在拐角看到一个大超市。火车站就在那里。" }
+  ],
+  shopping: [
+    { en: "That shirt is $29.99. We also have it in other colors if you'd like to try!", zh: "这件衬衫 29.99 美元。我们还有其他颜色，您想试试吗？" },
+    { en: "The fitting room is right over there. Let me know if you need any help!", zh: "试衣间就在那边。需要帮助请告诉我！" }
+  ],
+  introduction: [
+    { en: "Nice to meet you! Where are you from originally?", zh: "很高兴认识你！你原来是哪里人？" },
+    { en: "That's wonderful! What brings you here?", zh: "太棒了！是什么让你来到这里的？" }
+  ]
+};
 
 const ChatPractice = ({ userLevel }) => {
   const { t } = useLanguage();
@@ -74,32 +95,40 @@ const ChatPractice = ({ userLevel }) => {
     setMessages(newMessages);
 
     try {
-      // 准备对话历史
-      const conversationHistory = messages
-        .filter(msg => msg.type === 'user' || msg.type === 'ai')
-        .map(msg => ({
-          user_message: msg.type === 'user' ? msg.content : '',
-          ai_response: msg.type === 'ai' ? msg.content : ''
-        }))
-        .filter(msg => msg.user_message || msg.ai_response);
+      if (IS_DEMO_MODE) {
+        // Demo 模式：使用模拟回复
+        const replies = DEMO_REPLIES[selectedScenario] || DEMO_REPLIES.introduction;
+        const aiCount = messages.filter(m => m.type === 'ai').length;
+        const replyIndex = aiCount % replies.length;
+        const aiReply = replies[replyIndex][t.language === 'en' ? 'en' : 'zh'];
+        setMessages([...newMessages, { type: 'ai', content: aiReply }]);
+      } else {
+        // 准备对话历史
+        const conversationHistory = messages
+          .filter(msg => msg.type === 'user' || msg.type === 'ai')
+          .map(msg => ({
+            user_message: msg.type === 'user' ? msg.content : '',
+            ai_response: msg.type === 'ai' ? msg.content : ''
+          }))
+          .filter(msg => msg.user_message || msg.ai_response);
 
-      // 获取自定义场景信息
-      const currentScenario = [...conversationStarters, ...customScenarios].find(s => s.id === selectedScenario);
-      const customScenarioName = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.title : null;
-      const customScenarioDescription = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.description : null;
+        // 获取自定义场景信息
+        const currentScenario = [...conversationStarters, ...customScenarios].find(s => s.id === selectedScenario);
+        const customScenarioName = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.title : null;
+        const customScenarioDescription = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.description : null;
 
-      const response = await axios.post(`${API_BASE_URL}/chat`, {
-        message: userMessage,
-        context: selectedScenario,
-        level: userLevel,
-        conversation_history: conversationHistory,
-        custom_scenario_name: customScenarioName,
-        custom_scenario_description: customScenarioDescription
-      });
+        const response = await axios.post(`${API_BASE_URL}/chat`, {
+          message: userMessage,
+          context: selectedScenario,
+          level: userLevel,
+          conversation_history: conversationHistory,
+          custom_scenario_name: customScenarioName,
+          custom_scenario_description: customScenarioDescription
+        });
 
-      if (response.data.success) {
-        // 添加AI回复
-        setMessages([...newMessages, { type: 'ai', content: response.data.response }]);
+        if (response.data.success) {
+          setMessages([...newMessages, { type: 'ai', content: response.data.response }]);
+        }
       }
     } catch (error) {
       console.error('发送消息失败:', error);

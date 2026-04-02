@@ -3,7 +3,62 @@ import { Send, FileText, Brain, BookOpen, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../components/Toast';
-import API_BASE_URL from '../config';
+import API_BASE_URL, { IS_DEMO_MODE } from '../config';
+
+// Demo 模式模拟数据
+const DEMO_ANALYSIS = `语言分析结果（演示模式）：
+
+这段文本展示了以下语言特点：
+
+1. 词汇丰富度：⭐⭐⭐⭐
+   - 使用了多样化的表达方式
+   - 包含一些高级词汇
+
+2. 语法结构：⭐⭐⭐⭐
+   - 句式变化多样
+   - 时态使用准确
+
+3. 连贯性：⭐⭐⭐⭐⭐
+   - 段落之间逻辑清晰
+   - 使用恰当的连接词
+
+建议：继续保持！可以尝试使用更复杂的句式结构。`;
+
+const DEMO_EXERCISES = [
+  {
+    id: 1,
+    question: "What is the main idea of the text?",
+    options: [
+      "A. Learning languages is difficult",
+      "B. Language learning opens doors to new cultures",
+      "C. AI is changing education",
+      "D. Traveling helps language learning"
+    ],
+    correct: "B"
+  },
+  {
+    id: 2,
+    question: "Which word best describes the author's tone?",
+    options: [
+      "A. Negative",
+      "B. Neutral", 
+      "C. Optimistic",
+      "D. Critical"
+    ],
+    correct: "C"
+  },
+  {
+    id: 3,
+    question: "根据文章，AI 在语言学习中的作用是什么？",
+    options: [
+      "A. 替代老师",
+      "B. 提供个性化反馈",
+      "C. 增加学习负担",
+      "D. 减少学习时间"
+    ],
+    correct: "B"
+  }
+];
 
 const TextAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
@@ -22,22 +77,32 @@ const TextAnalysis = ({ userLevel }) => {
 
     setLoading(true);
     try {
+      if (IS_DEMO_MODE) {
+        // Demo 模式：使用模拟分析结果
+        setTimeout(() => {
+          setAnalysis(DEMO_ANALYSIS);
+          setCurrentStep(2);
+          toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
+          setLoading(false);
+        }, 800);
+      } else {
         const response = await axios.post(`${API_BASE_URL}/upload/text`, {
           text: text,
           level: userLevel,
           language: language
-      });
+        });
 
-      if (response.data.success) {
-        setAnalysis(response.data.analysis);
-        setCurrentStep(2);
-        toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
+        if (response.data.success) {
+          setAnalysis(response.data.analysis);
+          setCurrentStep(2);
+          toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
+        }
+        setLoading(false);
       }
     } catch (error) {
       console.error('分析失败:', error);
       const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Analysis failed, please retry' : '分析失败，请重试');
       toast.error(errorMsg);
-    } finally {
       setLoading(false);
     }
   };
@@ -47,25 +112,38 @@ const TextAnalysis = ({ userLevel }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/generate-exercises`, {
-        text: text,
-        analysis: analysis,
-        level: userLevel
-      });
+      if (IS_DEMO_MODE) {
+        // Demo 模式：使用模拟练习题
+        setTimeout(() => {
+          setExercises(DEMO_EXERCISES);
+          setExerciseId('demo-exercise');
+          setUserAnswers({});
+          setSubmittedAnswers({});
+          setCurrentStep(3);
+          toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
+          setLoading(false);
+        }, 800);
+      } else {
+        const response = await axios.post(`${API_BASE_URL}/generate-exercises`, {
+          text: text,
+          analysis: analysis,
+          level: userLevel
+        });
 
-      if (response.data.success) {
-        setExercises(response.data.exercises);
-        setExerciseId(response.data.exercise_id);
-        setUserAnswers({});
-        setSubmittedAnswers({});
-        setCurrentStep(3);
-        toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
+        if (response.data.success) {
+          setExercises(response.data.exercises);
+          setExerciseId(response.data.exercise_id);
+          setUserAnswers({});
+          setSubmittedAnswers({});
+          setCurrentStep(3);
+          toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
+        }
+        setLoading(false);
       }
     } catch (error) {
       console.error('生成练习失败:', error);
       const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试');
       toast.error(errorMsg);
-    } finally {
       setLoading(false);
     }
   };
@@ -74,28 +152,51 @@ const TextAnalysis = ({ userLevel }) => {
     if (!exerciseId || !userAnswers[questionId] || !exercises) return;
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/submit-answer`, null, {
-        params: {
-          exercise_id: exerciseId,
-          question_id: questionId,
-          user_answer: userAnswers[questionId],
-          questions_data: JSON.stringify(exercises)
-        }
-      });
-
-      if (response.data.success) {
-        setSubmittedAnswers(prev => ({
-          ...prev,
-          [questionId]: {
-            isCorrect: response.data.is_correct,
-            correctAnswer: response.data.correct_answer,
-            explanation: response.data.explanation,
-            userAnswer: response.data.user_answer
+      if (IS_DEMO_MODE) {
+        // Demo 模式：模拟答案验证
+        const question = Array.isArray(exercises) ? exercises.find(q => q.id === questionId) : null;
+        const userAnswer = userAnswers[questionId];
+        const correctAnswer = question?.correct || 'B';
+        const isCorrect = userAnswer === correctAnswer;
+        
+        setTimeout(() => {
+          setSubmittedAnswers(prev => ({
+            ...prev,
+            [questionId]: {
+              isCorrect: isCorrect,
+              correctAnswer: correctAnswer,
+              explanation: isCorrect ? 'Great job! Your answer is correct.' : 'Not quite right. Review the text and try again.',
+              userAnswer: userAnswer
+            }
+          }));
+          toast.success(isCorrect ? 
+            (t.language === 'en' ? 'Correct!' : '回答正确！') :
+            (t.language === 'en' ? 'Answer submitted' : '答案已提交'));
+        }, 300);
+      } else {
+        const response = await axios.post(`${API_BASE_URL}/submit-answer`, null, {
+          params: {
+            exercise_id: exerciseId,
+            question_id: questionId,
+            user_answer: userAnswers[questionId],
+            questions_data: JSON.stringify(exercises)
           }
-        }));
-        toast.success(response.data.is_correct ?
-          (t.language === 'en' ? 'Correct!' : '回答正确！') :
-          (t.language === 'en' ? 'Answer submitted' : '答案已提交'));
+        });
+
+        if (response.data.success) {
+          setSubmittedAnswers(prev => ({
+            ...prev,
+            [questionId]: {
+              isCorrect: response.data.is_correct,
+              correctAnswer: response.data.correct_answer,
+              explanation: response.data.explanation,
+              userAnswer: response.data.user_answer
+            }
+          }));
+          toast.success(response.data.is_correct ?
+            (t.language === 'en' ? 'Correct!' : '回答正确！') :
+            (t.language === 'en' ? 'Answer submitted' : '答案已提交'));
+        }
       }
     } catch (error) {
       console.error('提交答案失败:', error);
