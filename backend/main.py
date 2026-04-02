@@ -397,3 +397,50 @@ async def get_learning_records(user_id: str = "demo_user", limit: int = 10):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+@app.delete("/learning-records")
+async def clear_learning_records():
+    """清除所有学习记录"""
+    try:
+        # 删除所有 demo_user 的记录
+        result = supabase.table("learning_records").delete().eq("user_id", "demo_user").execute()
+
+        return {
+            "success": True,
+            "message": "Successfully cleared all learning records",
+            "cleared_count": len(result.data) if result.data else 0
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"清除学习记录失败：{str(e)}")
+
+@app.delete("/chat-history")
+async def clear_chat_history():
+    """清除对话历史"""
+    try:
+        # 删除所有 chat_records
+        result = supabase.table("chat_records").delete().eq("user_id", "demo_user").execute()
+
+        return {
+            "success": True,
+            "message": "Successfully cleared chat history",
+            "cleared_count": len(result.data) if result.data else 0
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"清除对话历史失败：{str(e)}")
+
+@app.get("/chat-history")
+async def get_chat_history(limit: int = 20):
+    """获取对话历史"""
+    try:
+        result = supabase.table("chat_records").select("*").eq("user_id", "demo_user").order("created_at", desc=True).limit(limit).execute()
+
+        return {
+            "success": True,
+            "conversation_history": result.data,
+            "total": len(result.data) if result.data else 0
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取对话历史失败：{str(e)}")
