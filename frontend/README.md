@@ -1,6 +1,6 @@
-# LinguaMate AI Frontend
+# Linguamate Pro Frontend
 
-这是LinguaMate AI的前端React应用，提供智能语言学习功能。
+这是Linguamate Pro的前端React应用，提供智能语言学习功能。
 
 ## 功能特性
 

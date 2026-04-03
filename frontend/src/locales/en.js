@@ -12,13 +12,13 @@ export const en = {
   
   // Home
   home: {
-    title: "LinguaMate AI",
+    title: "Linguamate Pro",
     subtitle: "Intelligent Language Learning Assistant",
     description: "Enhance your language learning experience with AI technology",
     hero: {
       title: "Let AI combine linguistic principles",
       subtitle: "Create personalized language learning experience",
-      description: "LinguaMate AI is a multimodal language learning companion that uses artificial intelligence to help learners master language in authentic contexts",
+      description: "Linguamate Pro is a multimodal language learning companion that uses artificial intelligence to help learners master language in authentic contexts",
       startTextAnalysis: "Start Text Analysis",
       uploadImage: "Upload Image Analysis"
     },
@@ -32,7 +32,7 @@ export const en = {
       chatDesc: "Practice language skills through real-time conversations with AI in authentic scenarios"
     },
     coreFeatures: "Core Features",
-    whyChoose: "Why Choose LinguaMate AI?",
+    whyChoose: "Why Choose Linguamate Pro?",
     demo: "Demo Scenarios",
     cta: {
       title: "Start Your Language Learning Journey",

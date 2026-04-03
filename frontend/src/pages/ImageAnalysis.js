@@ -3,11 +3,13 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, Image as ImageIcon, Brain, BookOpen, CheckCircle, X } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAIConfig } from '../contexts/AIConfigContext';
 import { useToast } from '../components/Toast';
-import API_BASE_URL from '../config';
+import API_BASE_URL, { callAI_API, TEXT_ANALYSIS_PROMPT, EXERCISE_GENERATION_PROMPT } from '../config';
 
 const ImageAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
+  const { config: aiConfig } = useAIConfig();
   const toast = useToast();
   const [uploadedFile, setUploadedFile] = useState(null);
   const [extractedText, setExtractedText] = useState('');
@@ -52,8 +54,18 @@ const ImageAnalysis = ({ userLevel }) => {
       });
 
       if (response.data.success) {
-        setExtractedText(response.data.extracted_text);
-        setAnalysis(response.data.analysis);
+        const extractedText = response.data.extracted_text;
+        setExtractedText(extractedText);
+
+        // 如果配置了 AI，使用 AI 进行分析
+        if (aiConfig.enabled && aiConfig.apiKey) {
+          const prompt = TEXT_ANALYSIS_PROMPT.replace('{text}', extractedText);
+          const analysisResult = await callAI_API(prompt, {}, aiConfig);
+          setAnalysis(analysisResult);
+        } else {
+          setAnalysis(response.data.analysis);
+        }
+
         setCurrentStep(2);
       }
     } catch (error) {
@@ -72,16 +84,33 @@ const ImageAnalysis = ({ userLevel }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/generate-exercises`, {
-        text: extractedText,
-        analysis: analysis,
-        level: userLevel
-      });
-
-      if (response.data.success) {
-        setExercises(response.data.exercises);
-        setExerciseId(response.data.exercise_id);
+      // 优先使用 AI 配置调用真实 API
+      if (aiConfig.enabled && aiConfig.apiKey) {
+        const prompt = EXERCISE_GENERATION_PROMPT.replace('{text}', extractedText).replace('{analysis}', analysis);
+        const result = await callAI_API(prompt, {}, aiConfig);
+        // 尝试解析 JSON
+        try {
+          const exercises = JSON.parse(result);
+          setExercises(exercises);
+        } catch {
+          setExercises(result);
+        }
+        setExerciseId('ai-exercise');
         setCurrentStep(3);
+        toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
+        setLoading(false);
+      } else {
+        const response = await axios.post(`${API_BASE_URL}/generate-exercises`, {
+          text: extractedText,
+          analysis: analysis,
+          level: userLevel
+        });
+
+        if (response.data.success) {
+          setExercises(response.data.exercises);
+          setExerciseId(response.data.exercise_id);
+          setCurrentStep(3);
+        }
       }
     } catch (error) {
       console.error('生成练习失败:', error);

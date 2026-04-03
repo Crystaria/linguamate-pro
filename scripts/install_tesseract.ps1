@@ -83,7 +83,7 @@ try {
     
     Write-Host ""
     Write-Host "=== 安装完成 ===" -ForegroundColor Green
-    Write-Host "现在您可以重启LinguaMate AI后端服务器来使用真实的OCR功能!" -ForegroundColor Green
+    Write-Host "现在您可以重启Linguamate Pro后端服务器来使用真实的OCR功能!" -ForegroundColor Green
     Write-Host "运行命令: python backend\main_local.py" -ForegroundColor Cyan
     
 } catch {

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, User, Bot, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
-import API_BASE_URL, { IS_DEMO_MODE } from '../config';
+import { useAIConfig } from '../contexts/AIConfigContext';
+import API_BASE_URL, { IS_DEMO_MODE, callAI_API, CHAT_REPLY_PROMPT } from '../config';
 
 // Demo 模式回复模板
 const DEMO_REPLIES = {
@@ -26,7 +27,8 @@ const DEMO_REPLIES = {
 };
 
 const ChatPractice = ({ userLevel }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { config: aiConfig } = useAIConfig();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -95,15 +97,62 @@ const ChatPractice = ({ userLevel }) => {
     setMessages(newMessages);
 
     try {
-      if (IS_DEMO_MODE) {
+      // 优先使用 AI 配置调用真实 API
+      if (aiConfig.enabled && aiConfig.apiKey) {
+        const currentScenario = [...conversationStarters, ...customScenarios].find(s => s.id === selectedScenario);
+        const context = currentScenario?.description || selectedScenario || 'casual chat';
+        const prompt = CHAT_REPLY_PROMPT
+          .replace('{context}', context)
+          .replace('{level}', userLevel)
+          .replace('{message}', userMessage);
+
+        const result = await callAI_API(prompt, {}, aiConfig);
+        setMessages([...newMessages, { type: 'ai', content: result }]);
+
+        // 保存学习记录（每 3 条消息保存一次）
+        if ((messages.filter(m => m.type === 'user').length + 1) % 3 === 0) {
+          try {
+            const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
+            axios.post(`${API_BASE_URL}/learning-records`, null, {
+              params: {
+                record_type: 'chat_practice',
+                level: userLevel,
+                content: conversationContent.substring(0, 500),
+                context: selectedScenario,
+                language: language
+              }
+            });
+          } catch (e) {
+            console.warn('保存学习记录失败:', e);
+          }
+        }
+      } else if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟回复
         const replies = DEMO_REPLIES[selectedScenario] || DEMO_REPLIES.introduction;
         const aiCount = messages.filter(m => m.type === 'ai').length;
         const replyIndex = aiCount % replies.length;
         const aiReply = replies[replyIndex][t.language === 'en' ? 'en' : 'zh'];
         setMessages([...newMessages, { type: 'ai', content: aiReply }]);
+
+        // 保存学习记录（每 3 条消息保存一次）
+        if ((aiCount + 1) % 3 === 0) {
+          try {
+            const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
+            axios.post(`${API_BASE_URL}/learning-records`, null, {
+              params: {
+                record_type: 'chat_practice',
+                level: userLevel,
+                content: conversationContent.substring(0, 500),
+                context: selectedScenario,
+                language: language
+              }
+            });
+          } catch (e) {
+            console.warn('保存学习记录失败:', e);
+          }
+        }
       } else {
-        // 准备对话历史
+        // 后端 API 模式
         const conversationHistory = messages
           .filter(msg => msg.type === 'user' || msg.type === 'ai')
           .map(msg => ({
@@ -112,10 +161,9 @@ const ChatPractice = ({ userLevel }) => {
           }))
           .filter(msg => msg.user_message || msg.ai_response);
 
-        // 获取自定义场景信息
         const currentScenario = [...conversationStarters, ...customScenarios].find(s => s.id === selectedScenario);
-        const customScenarioName = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.title : null;
-        const customScenarioDescription = selectedScenario.startsWith('custom_') && currentScenario ? currentScenario.description : null;
+        const customScenarioName = selectedScenario?.startsWith('custom_') && currentScenario ? currentScenario.title : null;
+        const customScenarioDescription = selectedScenario?.startsWith('custom_') && currentScenario ? currentScenario.description : null;
 
         const response = await axios.post(`${API_BASE_URL}/chat`, {
           message: userMessage,
@@ -128,13 +176,32 @@ const ChatPractice = ({ userLevel }) => {
 
         if (response.data.success) {
           setMessages([...newMessages, { type: 'ai', content: response.data.response }]);
+
+          // 保存学习记录（每 3 条消息保存一次）
+          const aiCount = messages.filter(m => m.type === 'ai').length;
+          if ((aiCount + 1) % 3 === 0) {
+            try {
+              const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
+              axios.post(`${API_BASE_URL}/learning-records`, null, {
+                params: {
+                  record_type: 'chat_practice',
+                  level: userLevel,
+                  content: conversationContent.substring(0, 500),
+                  context: selectedScenario,
+                  language: language
+                }
+              });
+            } catch (e) {
+              console.warn('保存学习记录失败:', e);
+            }
+          }
         }
       }
     } catch (error) {
       console.error('发送消息失败:', error);
-      setMessages([...newMessages, { 
-        type: 'ai', 
-        content: t.language === 'en' ? 'Sorry, I encountered some issues. Please try again later.' : '抱歉，我遇到了一些问题。请稍后再试。' 
+      setMessages([...newMessages, {
+        type: 'ai',
+        content: t.language === 'en' ? 'Sorry, I encountered some issues. Please try again later.' : '抱歉，我遇到了一些问题。请稍后再试。'
       }]);
     } finally {
       setLoading(false);
@@ -459,7 +526,7 @@ const ChatPractice = ({ userLevel }) => {
                   <Bot className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">LinguaMate AI</h3>
+                  <h3 className="font-semibold text-gray-900">Linguamate Pro</h3>
                   <p className="text-sm text-gray-500">{t.language === 'en' ? 'Your language learning partner' : '你的语言学习伙伴'}</p>
                 </div>
               </div>

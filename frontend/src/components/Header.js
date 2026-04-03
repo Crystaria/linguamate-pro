@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, MessageCircle, Image, FileText, History } from 'lucide-react';
+import { BookOpen, MessageCircle, Image, FileText, History, Settings } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageToggle from './LanguageToggle';
 
@@ -31,7 +31,7 @@ const Header = ({ userLevel, setUserLevel }) => {
             <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-800">LinguaMate AI</span>
+            <span className="text-xl font-bold text-gray-800">Linguamate Pro</span>
           </Link>
 
           {/* 导航菜单 */}
@@ -74,6 +74,13 @@ const Header = ({ userLevel, setUserLevel }) => {
               </select>
             </div>
             <LanguageToggle />
+            <Link
+              to="/settings"
+              className="p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition-colors"
+              title={t.language === 'en' ? 'AI Settings' : 'AI 设置'}
+            >
+              <Settings className="w-5 h-5" />
+            </Link>
           </div>
         </div>
 

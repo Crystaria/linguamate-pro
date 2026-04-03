@@ -12,7 +12,7 @@ from pydantic import BaseModel
 # 加载环境变量
 load_dotenv()
 
-app = FastAPI(title="LinguaMate AI API", version="1.0.0")
+app = FastAPI(title="Linguamate Pro API", version="1.0.0")
 
 # CORS设置
 app.add_middleware(
@@ -75,7 +75,7 @@ EXERCISE_GENERATION_PROMPT = """
 
 @app.get("/")
 async def root():
-    return {"message": "LinguaMate AI API is running!"}
+    return {"message": "Linguamate Pro API is running!"}
 
 @app.post("/generate-exercises")
 async def generate_exercises(request: ExerciseRequest):

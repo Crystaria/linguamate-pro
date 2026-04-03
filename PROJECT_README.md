@@ -1,6 +1,6 @@
-# LinguaMate AI - 智能语言学习平台
+# Linguamate Pro - 智能语言学习平台
 
-LinguaMate AI是一个基于AI的智能语言学习平台，提供文本分析、图片识别、AI对话练习等多种学习功能。
+Linguamate Pro是一个基于AI的智能语言学习平台，提供文本分析、图片识别、AI对话练习等多种学习功能。
 
 ## 🌟 主要功能
 
