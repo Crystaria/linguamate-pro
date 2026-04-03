@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Send, FileText, Brain, BookOpen, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAIConfig } from '../contexts/AIConfigContext';
 import { useToast } from '../components/Toast';
-import API_BASE_URL, { IS_DEMO_MODE } from '../config';
+import API_BASE_URL, { IS_DEMO_MODE, callAI_API, TEXT_ANALYSIS_PROMPT, EXERCISE_GENERATION_PROMPT } from '../config';
 
 // Demo 模式模拟数据 - 在组件内根据语言动态获取
 const getDemoAnalysis = (lang) => lang === 'zh' ? `语言学分析结果（演示模式）：
@@ -112,6 +113,7 @@ const getDemoExercises = (lang) => lang === 'zh' ? [
 
 const TextAnalysis = ({ userLevel }) => {
   const { t, language } = useLanguage();
+  const { config: aiConfig } = useAIConfig();
   const toast = useToast();
   const [text, setText] = useState('');
   const [analysis, setAnalysis] = useState(null);
@@ -127,13 +129,52 @@ const TextAnalysis = ({ userLevel }) => {
 
     setLoading(true);
     try {
-      if (IS_DEMO_MODE) {
+      // 优先使用 AI 配置调用真实 API
+      if (aiConfig.enabled && aiConfig.apiKey) {
+        const prompt = TEXT_ANALYSIS_PROMPT.replace('{text}', text);
+        const result = await callAI_API(prompt, {}, aiConfig);
+        setAnalysis(result);
+        setCurrentStep(2);
+        toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
+        setLoading(false);
+
+        // 保存学习记录
+        try {
+          await axios.post(`${API_BASE_URL}/learning-records`, null, {
+            params: {
+              record_type: 'text_analysis',
+              level: userLevel,
+              content: text.substring(0, 500),
+              analysis: result.substring(0, 1000),
+              language: language
+            }
+          });
+        } catch (e) {
+          console.warn('保存学习记录失败:', e);
+        }
+      } else if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟分析结果
         setTimeout(() => {
           setAnalysis(getDemoAnalysis(t.language));
           setCurrentStep(2);
           toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
           setLoading(false);
+
+          // 保存学习记录（Demo 模式）
+          try {
+            const demoAnalysis = getDemoAnalysis(t.language);
+            axios.post(`${API_BASE_URL}/learning-records`, null, {
+              params: {
+                record_type: 'text_analysis',
+                level: userLevel,
+                content: text.substring(0, 500),
+                analysis: demoAnalysis.substring(0, 1000),
+                language: language
+              }
+            });
+          } catch (e) {
+            console.warn('保存学习记录失败:', e);
+          }
         }, 800);
       } else {
         const response = await axios.post(`${API_BASE_URL}/upload/text`, {
@@ -146,12 +187,27 @@ const TextAnalysis = ({ userLevel }) => {
           setAnalysis(response.data.analysis);
           setCurrentStep(2);
           toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
+
+          // 保存学习记录
+          try {
+            await axios.post(`${API_BASE_URL}/learning-records`, null, {
+              params: {
+                record_type: 'text_analysis',
+                level: userLevel,
+                content: text.substring(0, 500),
+                analysis: response.data.analysis.substring(0, 1000),
+                language: language
+              }
+            });
+          } catch (e) {
+            console.warn('保存学习记录失败:', e);
+          }
         }
         setLoading(false);
       }
     } catch (error) {
       console.error('分析失败:', error);
-      const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Analysis failed, please retry' : '分析失败，请重试');
+      const errorMsg = error.message || error.response?.data?.detail || (t.language === 'en' ? 'Analysis failed, please retry' : '分析失败，请重试');
       toast.error(errorMsg);
       setLoading(false);
     }
@@ -162,7 +218,24 @@ const TextAnalysis = ({ userLevel }) => {
 
     setLoading(true);
     try {
-      if (IS_DEMO_MODE) {
+      // 优先使用 AI 配置调用真实 API
+      if (aiConfig.enabled && aiConfig.apiKey) {
+        const prompt = EXERCISE_GENERATION_PROMPT.replace('{text}', text).replace('{analysis}', analysis);
+        const result = await callAI_API(prompt, {}, aiConfig);
+        // 尝试解析 JSON
+        try {
+          const exercises = JSON.parse(result);
+          setExercises(exercises);
+        } catch {
+          setExercises(result);
+        }
+        setExerciseId('ai-exercise');
+        setUserAnswers({});
+        setSubmittedAnswers({});
+        setCurrentStep(3);
+        toast.success(t.language === 'en' ? 'Exercises generated!' : '练习题已生成！');
+        setLoading(false);
+      } else if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟练习题
         setTimeout(() => {
           setExercises(getDemoExercises(t.language));
@@ -192,7 +265,7 @@ const TextAnalysis = ({ userLevel }) => {
       }
     } catch (error) {
       console.error('生成练习失败:', error);
-      const errorMsg = error.response?.data?.detail || (t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试');
+      const errorMsg = error.message || error.response?.data?.detail || (t.language === 'en' ? 'Failed to generate exercises, please retry' : '生成练习失败，请重试');
       toast.error(errorMsg);
       setLoading(false);
     }

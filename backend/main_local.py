@@ -51,7 +51,7 @@ learning_records = []
 # 全局对话历史存储（内存存储）
 conversation_history = []
 
-logger.info("LinguaMate AI Local Backend starting...")
+logger.info("Linguamate Pro Local Backend starting...")
 
 
 
@@ -101,7 +101,7 @@ def save_learning_record(record_type: str, level: str, content: str, analysis: s
     learning_records.append(record)
     return record_id
 
-app = FastAPI(title="LinguaMate AI API", version="1.0.0")
+app = FastAPI(title="Linguamate Pro API", version="1.0.0")
 
 # CORS 设置 - 支持本地开发和 Vercel 部署
 app.add_middleware(
@@ -1021,7 +1021,7 @@ def generate_advanced_exercises(text: str, key_words: list, sentences: list) -> 
 
 @app.get("/")
 async def root():
-    return {"message": "LinguaMate AI API is running with Local AI!"}
+    return {"message": "Linguamate Pro API is running with Local AI!"}
 
 @app.post("/upload/text")
 async def upload_text(request: dict):
@@ -1491,6 +1491,45 @@ async def upload_image(file: UploadFile = File(...), level: str = "beginner", la
     except Exception as e:
         error_msg = f"Image processing failed: {str(e)}" if language == "en" else f"图片处理失败: {str(e)}"
         raise HTTPException(status_code=500, detail=error_msg)
+
+@app.post("/learning-records")
+async def create_learning_record(
+    record_type: str,
+    level: str,
+    content: str,
+    analysis: str = None,
+    exercises: str = None,
+    score: int = None,
+    language: str = "zh",
+    context: str = None
+):
+    """保存学习记录"""
+    try:
+        import json
+        exercises_data = None
+        if exercises:
+            try:
+                exercises_data = json.loads(exercises)
+            except:
+                exercises_data = exercises
+
+        record_id = save_learning_record(
+            record_type=record_type,
+            level=level,
+            content=content,
+            analysis=analysis,
+            exercises=exercises_data,
+            score=score,
+            language=language,
+            context=context
+        )
+
+        return {
+            "success": True,
+            "record_id": record_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"保存学习记录失败：{str(e)}")
 
 @app.get("/learning-records")
 async def get_learning_records():

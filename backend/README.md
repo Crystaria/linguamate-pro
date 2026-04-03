@@ -1,6 +1,6 @@
-# LinguaMate AI Backend
+# Linguamate Pro Backend
 
-这是LinguaMate AI的后端FastAPI服务，提供智能语言学习和分析功能。
+这是Linguamate Pro的后端FastAPI服务，提供智能语言学习和分析功能。
 
 ## 功能特性
 

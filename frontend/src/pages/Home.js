@@ -53,7 +53,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="text-center py-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {t.home.hero.title}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-secondary-500">
               {t.home.hero.subtitle}

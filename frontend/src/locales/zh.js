@@ -12,13 +12,13 @@ export const zh = {
   
   // 首页
   home: {
-    title: "LinguaMate AI",
+    title: "Linguamate Pro",
     subtitle: "智能语言学习助手",
     description: "通过AI技术提升您的语言学习体验",
     hero: {
       title: "让 AI 结合语言学原理",
       subtitle: "打造个性化语言学习体验",
-      description: "LinguaMate AI 是一个多模态语言学习伴侣，利用人工智能帮助学习者在真实语境中掌握语言",
+      description: "Linguamate Pro 是一个多模态语言学习伴侣，利用人工智能帮助学习者在真实语境中掌握语言",
       startTextAnalysis: "开始文本分析",
       uploadImage: "上传图片分析"
     },
@@ -32,7 +32,7 @@ export const zh = {
       chatDesc: "通过AI在真实场景中进行实时对话练习，提升语言技能"
     },
     coreFeatures: "核心功能",
-    whyChoose: "为什么选择 LinguaMate AI？",
+    whyChoose: "为什么选择 Linguamate Pro？",
     demo: "演示场景",
     cta: {
       title: "开始你的语言学习之旅",

@@ -158,8 +158,8 @@ const LearningHistory = () => {
           <h2 className="text-xl font-semibold text-gray-600 mb-2">{t.history.noHistory}</h2>
           <p className="text-gray-500">
             {t.language === 'en' 
-              ? 'Start using LinguaMate AI for language learning, and your records will appear here.' 
-              : '开始使用 LinguaMate AI 进行语言学习，记录将在这里显示。'
+              ? 'Start using Linguamate Pro for language learning, and your records will appear here.'
+              : '开始使用 Linguamate Pro 进行语言学习，记录将在这里显示。'
             }
           </p>
         </div>

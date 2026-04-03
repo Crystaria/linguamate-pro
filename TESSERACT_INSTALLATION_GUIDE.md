@@ -117,7 +117,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 
 ## 项目集成
 
-安装完成后，您的LinguaMate AI项目将自动使用真实的OCR功能：
+安装完成后，您的Linguamate Pro项目将自动使用真实的OCR功能：
 
 1. **重启后端服务器**
    ```cmd
@@ -154,5 +154,5 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 
 ---
 
-安装完成后，您的LinguaMate AI将具备完整的OCR功能，能够从图片中准确提取文字内容进行语言分析！
+安装完成后，您的Linguamate Pro将具备完整的OCR功能，能够从图片中准确提取文字内容进行语言分析！
 
