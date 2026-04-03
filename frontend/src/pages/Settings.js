@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Key, Server, Cpu, CheckCircle, XCircle, Trash2, Save } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Server, Cpu, CheckCircle, XCircle, Trash2, Save } from 'lucide-react';
 import { useAIConfig } from '../contexts/AIConfigContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -33,7 +33,7 @@ const Settings = () => {
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-2">
-          <Settings className="w-8 h-8 text-primary-500" />
+          <SettingsIcon className="w-8 h-8 text-primary-500" />
           <h1 className="text-2xl font-bold text-gray-900">
             {t.language === 'en' ? 'AI Settings' : 'AI 设置'}
           </h1>

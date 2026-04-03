@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, FileText, Image, MessageCircle, Eye, Trash2, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
-import API_BASE_URL from '../config';
 
 const LearningHistory = () => {
   const { t } = useLanguage();
@@ -16,11 +14,12 @@ const LearningHistory = () => {
     fetchLearningRecords();
   }, []);
 
-  const fetchLearningRecords = async () => {
+  const fetchLearningRecords = () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/learning-records`);
-      if (response.data.success) {
-        setRecords(response.data.records);
+      // 从 localStorage 获取学习记录
+      const stored = localStorage.getItem('linguamate-learning-records');
+      if (stored) {
+        setRecords(JSON.parse(stored));
       }
     } catch (error) {
       console.error('获取学习记录失败:', error);
@@ -29,22 +28,41 @@ const LearningHistory = () => {
     }
   };
 
-  const clearAllRecords = async () => {
+  const saveLearningRecords = (newRecords) => {
+    localStorage.setItem('linguamate-learning-records', JSON.stringify(newRecords));
+    setRecords(newRecords);
+  };
+
+  // 暴露全局函数供其他组件调用
+  useEffect(() => {
+    window.addLearningRecord = (record) => {
+      const stored = localStorage.getItem('linguamate-learning-records');
+      const records = stored ? JSON.parse(stored) : [];
+      const newRecord = {
+        id: record.type + '_' + Date.now(),
+        ...record,
+        timestamp: new Date().toISOString()
+      };
+      records.unshift(newRecord);
+      saveLearningRecords(records);
+    };
+    return () => { delete window.addLearningRecord; };
+  }, []);
+
+  const clearAllRecords = () => {
     setClearing(true);
     try {
-      const response = await axios.delete(`${API_BASE_URL}/learning-records`);
-      if (response.data.success) {
-        setRecords([]);
-        setSelectedRecord(null);
-        setShowClearConfirm(false);
-        alert(t.language === 'en' 
-          ? `Successfully cleared ${response.data.cleared_count} learning records` 
-          : `成功清除 ${response.data.cleared_count} 条学习记录`);
-      }
+      localStorage.removeItem('linguamate-learning-records');
+      setRecords([]);
+      setSelectedRecord(null);
+      setShowClearConfirm(false);
+      alert(t.language === 'en'
+        ? 'Successfully cleared all learning records'
+        : '成功清除所有学习记录');
     } catch (error) {
       console.error('清除学习记录失败:', error);
-      alert(t.language === 'en' 
-        ? 'Failed to clear learning records' 
+      alert(t.language === 'en'
+        ? 'Failed to clear learning records'
         : '清除学习记录失败');
     } finally {
       setClearing(false);
