@@ -109,21 +109,17 @@ const ChatPractice = ({ userLevel }) => {
         const result = await callAI_API(prompt, {}, aiConfig);
         setMessages([...newMessages, { type: 'ai', content: result }]);
 
-        // 保存学习记录（每 3 条消息保存一次）
+        // 保存学习记录到 localStorage（每 3 条消息保存一次）
         if ((messages.filter(m => m.type === 'user').length + 1) % 3 === 0) {
-          try {
+          if (window.addLearningRecord) {
             const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
-            axios.post(`${API_BASE_URL}/learning-records`, null, {
-              params: {
-                record_type: 'chat_practice',
-                level: userLevel,
-                content: conversationContent.substring(0, 500),
-                context: selectedScenario,
-                language: language
-              }
+            window.addLearningRecord({
+              type: 'chat_practice',
+              level: userLevel,
+              content: conversationContent.substring(0, 500),
+              context: selectedScenario,
+              language: language
             });
-          } catch (e) {
-            console.warn('保存学习记录失败:', e);
           }
         }
       } else if (IS_DEMO_MODE) {
@@ -134,21 +130,17 @@ const ChatPractice = ({ userLevel }) => {
         const aiReply = replies[replyIndex][t.language === 'en' ? 'en' : 'zh'];
         setMessages([...newMessages, { type: 'ai', content: aiReply }]);
 
-        // 保存学习记录（每 3 条消息保存一次）
+        // 保存学习记录到 localStorage（每 3 条消息保存一次）
         if ((aiCount + 1) % 3 === 0) {
-          try {
+          if (window.addLearningRecord) {
             const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
-            axios.post(`${API_BASE_URL}/learning-records`, null, {
-              params: {
-                record_type: 'chat_practice',
-                level: userLevel,
-                content: conversationContent.substring(0, 500),
-                context: selectedScenario,
-                language: language
-              }
+            window.addLearningRecord({
+              type: 'chat_practice',
+              level: userLevel,
+              content: conversationContent.substring(0, 500),
+              context: selectedScenario,
+              language: language
             });
-          } catch (e) {
-            console.warn('保存学习记录失败:', e);
           }
         }
       } else {
@@ -177,22 +169,18 @@ const ChatPractice = ({ userLevel }) => {
         if (response.data.success) {
           setMessages([...newMessages, { type: 'ai', content: response.data.response }]);
 
-          // 保存学习记录（每 3 条消息保存一次）
+          // 保存学习记录到 localStorage（每 3 条消息保存一次）
           const aiCount = messages.filter(m => m.type === 'ai').length;
           if ((aiCount + 1) % 3 === 0) {
-            try {
+            if (window.addLearningRecord) {
               const conversationContent = messages.map(m => `${m.type === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
-              axios.post(`${API_BASE_URL}/learning-records`, null, {
-                params: {
-                  record_type: 'chat_practice',
-                  level: userLevel,
-                  content: conversationContent.substring(0, 500),
-                  context: selectedScenario,
-                  language: language
-                }
+              window.addLearningRecord({
+                type: 'chat_practice',
+                level: userLevel,
+                content: conversationContent.substring(0, 500),
+                context: selectedScenario,
+                language: language
               });
-            } catch (e) {
-              console.warn('保存学习记录失败:', e);
             }
           }
         }

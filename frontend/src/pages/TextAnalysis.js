@@ -138,19 +138,15 @@ const TextAnalysis = ({ userLevel }) => {
         toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
         setLoading(false);
 
-        // 保存学习记录
-        try {
-          await axios.post(`${API_BASE_URL}/learning-records`, null, {
-            params: {
-              record_type: 'text_analysis',
-              level: userLevel,
-              content: text.substring(0, 500),
-              analysis: result.substring(0, 1000),
-              language: language
-            }
+        // 保存学习记录到 localStorage
+        if (window.addLearningRecord) {
+          window.addLearningRecord({
+            type: 'text_analysis',
+            level: userLevel,
+            content: text.substring(0, 500),
+            analysis: result.substring(0, 1000),
+            language: language
           });
-        } catch (e) {
-          console.warn('保存学习记录失败:', e);
         }
       } else if (IS_DEMO_MODE) {
         // Demo 模式：使用模拟分析结果
@@ -160,20 +156,16 @@ const TextAnalysis = ({ userLevel }) => {
           toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
           setLoading(false);
 
-          // 保存学习记录（Demo 模式）
-          try {
+          // 保存学习记录到 localStorage
+          if (window.addLearningRecord) {
             const demoAnalysis = getDemoAnalysis(t.language);
-            axios.post(`${API_BASE_URL}/learning-records`, null, {
-              params: {
-                record_type: 'text_analysis',
-                level: userLevel,
-                content: text.substring(0, 500),
-                analysis: demoAnalysis.substring(0, 1000),
-                language: language
-              }
+            window.addLearningRecord({
+              type: 'text_analysis',
+              level: userLevel,
+              content: text.substring(0, 500),
+              analysis: demoAnalysis.substring(0, 1000),
+              language: language
             });
-          } catch (e) {
-            console.warn('保存学习记录失败:', e);
           }
         }, 800);
       } else {
@@ -188,19 +180,15 @@ const TextAnalysis = ({ userLevel }) => {
           setCurrentStep(2);
           toast.success(t.language === 'en' ? 'Analysis completed!' : '分析完成！');
 
-          // 保存学习记录
-          try {
-            await axios.post(`${API_BASE_URL}/learning-records`, null, {
-              params: {
-                record_type: 'text_analysis',
-                level: userLevel,
-                content: text.substring(0, 500),
-                analysis: response.data.analysis.substring(0, 1000),
-                language: language
-              }
+          // 保存学习记录到 localStorage
+          if (window.addLearningRecord) {
+            window.addLearningRecord({
+              type: 'text_analysis',
+              level: userLevel,
+              content: text.substring(0, 500),
+              analysis: response.data.analysis.substring(0, 1000),
+              language: language
             });
-          } catch (e) {
-            console.warn('保存学习记录失败:', e);
           }
         }
         setLoading(false);
