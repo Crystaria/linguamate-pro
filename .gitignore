@@ -71,3 +71,6 @@ uploaded/
 
 # Vercel
 .vercel
+
+# 本地环境变量，禁止提交
+backend/.env
